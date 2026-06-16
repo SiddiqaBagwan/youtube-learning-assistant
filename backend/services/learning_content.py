@@ -16,31 +16,58 @@ model = genai.GenerativeModel("gemini-2.5-flash")
 def generate_learning_content(transcript):
 
     prompt = f"""
-    Analyze the following YouTube transcript.
+Analyze the following YouTube transcript.
 
-    Return ONLY valid JSON.
+Return ONLY valid JSON.
 
-    Format:
+Format:
 
-    {{
-        "summary": "...",
-        "key_concepts": [
-            "...",
-            "..."
-        ],
-        "important_terms": [
-            "...",
-            "..."
-        ]
-    }}
+{{
+    "summary": "...",
 
-    Transcript:
-    {transcript}
-    """
+    "study_notes": [
+        "...",
+        "...",
+        "..."
+    ],
+
+    "key_concepts": [
+        "...",
+        "..."
+    ],
+
+    "important_terms": [
+        "...",
+        "..."
+    ],
+
+    "quiz_questions": [
+        {{
+            "question": "...",
+            "answer": "..."
+        }}
+    ]
+}}
+
+Generate:
+
+1. A concise summary.
+2. Study notes in bullet-point style.
+3. Key concepts discussed.
+4. Important terms.
+5. Five quiz questions with answers.
+
+Return ONLY valid JSON.
+Do not include markdown.
+Do not wrap the JSON in ```json blocks.
+
+Transcript:
+{transcript}
+"""
 
     response = model.generate_content(prompt)
 
-    text = response.text
+    text = response.text.strip()
 
     text = text.replace("```json", "")
     text = text.replace("```", "")
