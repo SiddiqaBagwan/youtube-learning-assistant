@@ -7,6 +7,7 @@ export default function Home() {
   const [videoUrl, setVideoUrl] = useState("");
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [visibleAnswers, setVisibleAnswers] = useState<number[]>([]);
 
   const analyzeVideo = async () => {
     try {
@@ -126,34 +127,57 @@ export default function Home() {
           </div>
 
           <div className="bg-white shadow-md rounded-xl p-6">
-            <h2 className="text-2xl font-bold mb-3">
-              Quiz Questions
-            </h2>
+  <h2 className="text-2xl font-bold mb-3">
+    Quiz Questions
+  </h2>
 
-            {result.data.quiz_questions.map(
-              (
-                quiz: {
-                  question: string;
-                  answer: string;
-                },
-                index: number
-              ) => (
-                <div
-                  key={index}
-                  className="border rounded-lg p-4 mb-3"
-                >
-                  <p>
-                    <strong>Q:</strong> {quiz.question}
-                  </p>
+  {result.data.quiz_questions.map(
+    (
+      quiz: {
+        question: string;
+        answer: string;
+      },
+      index: number
+    ) => (
+      <div
+        key={index}
+        className="border rounded-lg p-4 mb-3"
+      >
+        <p>
+          <strong>Q:</strong> {quiz.question}
+        </p>
 
-                  <p className="mt-2 text-green-700">
-                    <strong>A:</strong> {quiz.answer}
-                  </p>
-                </div>
-              )
-            )}
-          </div>
+        <button
+          className="mt-3 px-3 py-1 border rounded"
+          onClick={() => {
+            if (visibleAnswers.includes(index)) {
+              setVisibleAnswers(
+                visibleAnswers.filter(
+                  (i) => i !== index
+                )
+              );
+            } else {
+              setVisibleAnswers([
+                ...visibleAnswers,
+                index,
+              ]);
+            }
+          }}
+        >
+          {visibleAnswers.includes(index)
+            ? "Hide Answer"
+            : "Show Answer"}
+        </button>
 
+        {visibleAnswers.includes(index) && (
+          <p className="mt-3 text-green-700">
+            <strong>A:</strong> {quiz.answer}
+          </p>
+        )}
+      </div>
+    )
+  )}
+</div>
         </div>
       )}
     </main>
