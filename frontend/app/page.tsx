@@ -9,14 +9,11 @@ export default function Home() {
 
   const analyzeVideo = async () => {
     try {
-      const response = await axios.get(
-        "http://127.0.0.1:8000/analyze",
-        {
-          params: {
-            video_url: videoUrl,
-          },
-        }
-      );
+      const response = await axios.get("http://127.0.0.1:8000/analyze", {
+        params: {
+          video_url: videoUrl,
+        },
+      });
 
       setResult(response.data);
     } catch (error) {
@@ -27,9 +24,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen flex flex-col items-center p-10">
-      <h1 className="text-4xl font-bold mb-8">
-        YouTube Learning Assistant
-      </h1>
+      <h1 className="text-4xl font-bold mb-8">YouTube Learning Assistant</h1>
 
       <input
         type="text"
@@ -46,10 +41,67 @@ export default function Home() {
         Analyze Video
       </button>
 
-      {result && (
-        <div className="mt-10 w-full max-w-4xl">
-          <h2 className="text-2xl font-bold mb-4">Summary</h2>
-          <p>{result.data.summary}</p>
+      {result && result.success && (
+        <div className="mt-10 w-full max-w-4xl space-y-6">
+          <div>
+            <h2 className="text-2xl font-bold">Summary</h2>
+            <p>{result.data.summary}</p>
+          </div>
+
+          <div>
+            <h2 className="text-2xl font-bold">Study Notes</h2>
+            <ul className="list-disc pl-5">
+              {result.data.study_notes.map((note: string, index: number) => (
+                <li key={index}>{note}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h2 className="text-2xl font-bold">Key Concepts</h2>
+            <ul className="list-disc pl-5">
+              {result.data.key_concepts.map(
+                (concept: string, index: number) => (
+                  <li key={index}>{concept}</li>
+                ),
+              )}
+            </ul>
+          </div>
+
+          <div>
+            <h2 className="text-2xl font-bold">Important Terms</h2>
+            <ul className="list-disc pl-5">
+              {result.data.important_terms.map(
+                (term: string, index: number) => (
+                  <li key={index}>{term}</li>
+                ),
+              )}
+            </ul>
+          </div>
+
+          <div>
+            <h2 className="text-2xl font-bold">Quiz Questions</h2>
+
+            {result.data.quiz_questions.map(
+              (
+                quiz: {
+                  question: string;
+                  answer: string;
+                },
+                index: number,
+              ) => (
+                <div key={index} className="border p-4 rounded mb-3">
+                  <p>
+                    <strong>Q:</strong> {quiz.question}
+                  </p>
+
+                  <p>
+                    <strong>A:</strong> {quiz.answer}
+                  </p>
+                </div>
+              ),
+            )}
+          </div>
         </div>
       )}
     </main>
