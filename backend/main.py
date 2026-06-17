@@ -1,3 +1,4 @@
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 from services.transcript import get_transcript
 from services.summary import generate_summary
@@ -5,6 +6,14 @@ from services.youtube_utils import extract_video_id
 from services.learning_content import generate_learning_content
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def home():

@@ -6,21 +6,29 @@ import axios from "axios";
 export default function Home() {
   const [videoUrl, setVideoUrl] = useState("");
   const [result, setResult] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
 
   const analyzeVideo = async () => {
-    try {
-      const response = await axios.get("http://127.0.0.1:8000/analyze", {
+  try {
+    setLoading(true);
+
+    const response = await axios.get(
+      "http://127.0.0.1:8000/analyze",
+      {
         params: {
           video_url: videoUrl,
         },
-      });
+      }
+    );
 
-      setResult(response.data);
-    } catch (error) {
-      alert("Error analyzing video");
-      console.log(error);
-    }
-  };
+    setResult(response.data);
+  } catch (error) {
+    alert("Error analyzing video");
+    console.log(error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <main className="min-h-screen flex flex-col items-center p-10">
@@ -37,8 +45,9 @@ export default function Home() {
       <button
         className="mt-4 px-6 py-3 bg-black text-white rounded"
         onClick={analyzeVideo}
+        disabled={loading}
       >
-        Analyze Video
+        {loading ? "Analyzing..." : "Analyze Video"}
       </button>
 
       {result && result.success && (
