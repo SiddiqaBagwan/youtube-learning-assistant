@@ -80,18 +80,33 @@ export default function Home() {
           </div>
 
           <div className="bg-white shadow-md rounded-xl p-6">
-            <h2 className="text-2xl font-bold mb-3">
-              Study Notes
-            </h2>
+  <div className="flex justify-between items-center mb-3">
+    <h2 className="text-2xl font-bold">
+      Study Notes
+    </h2>
 
-            <ul className="list-disc pl-5 space-y-2">
-              {result.data.study_notes.map(
-                (note: string, index: number) => (
-                  <li key={index}>{note}</li>
-                )
-              )}
-            </ul>
-          </div>
+    <button
+      className="px-3 py-1 border rounded hover:bg-gray-100"
+      onClick={() => {
+        navigator.clipboard.writeText(
+          result.data.study_notes.join("\n")
+        );
+
+        alert("Study notes copied!");
+      }}
+    >
+      Copy Notes
+    </button>
+  </div>
+
+  <ul className="list-disc pl-5 space-y-2">
+    {result.data.study_notes.map(
+      (note: string, index: number) => (
+        <li key={index}>{note}</li>
+      )
+    )}
+  </ul>
+</div>
 
           <div className="bg-white shadow-md rounded-xl p-6">
             <h2 className="text-2xl font-bold mb-3">
