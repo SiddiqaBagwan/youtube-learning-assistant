@@ -31,6 +31,58 @@ export default function Home() {
     }
   };
 
+  const downloadNotes = () => {
+  if (!result) return;
+
+  const content = `
+SUMMARY
+
+${result.data.summary}
+
+---------------------------------
+
+STUDY NOTES
+
+${result.data.study_notes.join("\n")}
+
+---------------------------------
+
+KEY CONCEPTS
+
+${result.data.key_concepts.join("\n")}
+
+---------------------------------
+
+IMPORTANT TERMS
+
+${result.data.important_terms.join("\n")}
+
+---------------------------------
+
+QUIZ QUESTIONS
+
+${result.data.quiz_questions
+  .map(
+    (q: any, i: number) =>
+      `${i + 1}. ${q.question}\nAnswer: ${q.answer}`
+  )
+  .join("\n\n")}
+`;
+
+  const blob = new Blob([content], {
+    type: "text/plain",
+  });
+
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "study-material.txt";
+  a.click();
+
+  URL.revokeObjectURL(url);
+};
+
   return (
     <main className="min-h-screen bg-gray-100 flex flex-col items-center p-10">
       <h1 className="text-5xl font-bold mb-4">
@@ -49,26 +101,33 @@ export default function Home() {
         className="border bg-white p-3 rounded-lg w-full max-w-2xl shadow"
       />
 
-      <div className="flex gap-3 mt-4">
-        <button
-          className="px-6 py-3 bg-black text-white rounded-lg"
-          onClick={analyzeVideo}
-          disabled={loading}
-        >
-          {loading ? "Analyzing..." : "Analyze Video"}
-        </button>
+      <div className="flex gap-3 mt-4 flex-wrap">
+  <button
+    className="px-6 py-3 bg-black text-white rounded-lg"
+    onClick={analyzeVideo}
+    disabled={loading}
+  >
+    {loading ? "Analyzing..." : "Analyze Video"}
+  </button>
 
-        <button
-          className="px-6 py-3 border rounded-lg bg-white"
-          onClick={() => {
-            setVideoUrl("");
-            setResult(null);
-          }}
-        >
-          Clear
-        </button>
-      </div>
+  <button
+    className="px-6 py-3 border rounded-lg bg-white"
+    onClick={() => {
+      setVideoUrl("");
+      setResult(null);
+    }}
+  >
+    Clear
+  </button>
 
+  <button
+    className="px-6 py-3 border rounded-lg bg-white"
+    onClick={downloadNotes}
+    disabled={!result}
+  >
+    Download Notes
+  </button>
+</div>
       {result && result.success && (
         <div className="mt-10 w-full max-w-5xl space-y-6">
 
