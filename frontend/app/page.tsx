@@ -20,7 +20,7 @@ export default function Home() {
       setLoading(true);
 
       const response = await axios.get(
-        "http://127.0.0.1:8000/analyze",
+        "https://vidmentor.onrender.com/analyze",
         {
           params: {
             video_url: videoUrl,
